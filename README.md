@@ -9,8 +9,8 @@ Our church welcoming team serves off of a rotation for Sunday Service. Sometimes
 * Gmail API
 
 **Additional Files (not already found in repository) required:**
-* .env
-* json_key
+* env.py
+* json_key.json
 
 **Welcoming Team Members Sheet example:**
 Name  |  Email Address  |  Phone Number  |
