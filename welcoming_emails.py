@@ -9,13 +9,13 @@ from email.mime.text import MIMEText
 from string import Template
 from functools import reduce
 
-from .env import SHEET, SENDER, PASSWORD, PORT
+from env import SHEET, SENDER, PASSWORD, PORT, CC
 
 def read_email():
     ''' Reads the contents of the email.txt template and returns them as a text variable '''
-	with open('email.txt', 'r') as file:
-		contents = file.read()
-	return contents
+    with open('email.txt', 'r') as file:
+	    contents = file.read()
+    return contents
 
 def next_weekday(d, weekday):
     ''' Determines the next available date for a given day in the week; Mon = 0, Tue = 1, etc.
@@ -32,17 +32,16 @@ creds = ServiceAccountCredentials.from_json_keyfile_name('json_key.json', scope)
 client = gspread.authorize(creds)
 sheet = client.open(SHEET)
 
-
 # Calls the 'Welcoming Team Members' Sheet
 members_info_sheet = sheet.get_worksheet(0)
-member_info = member_info_sheet.get_all_records()
+member_info = members_info_sheet.get_all_records()
 
 # Reads the Name and Email Address columns and creates a list of dictionary mappings with names as the keys and email addresses as the values.
 # Then takes the list and creates a dictionary of name/ email address = key/value pairs
 member_email_list = [{dic['Name']: dic['Email Address']} for dic in member_info]
 member_email_dict = {}
-for member in member_map:
-	result.update(member)
+for member in member_email_list:
+	member_email_dict.update(member)
 
 # Calls the 'Welcoming Rotation 2021' Sheet
 rotation_info_sheet = sheet.get_worksheet(1)
@@ -63,6 +62,7 @@ sunday_df = sunday_df[['Greeter 1', 'Greeter 2', 'Usher']]
 serving_members = sunday_df.values.tolist()[0]
 new_list = [member_email_dict.get(member, member) for member in serving_members]
 serving_members_email_list = ','.join(new_list)
+print(serving_members_email_list)
 
 # Gmail login account information imported via .env file
 sender = SENDER
